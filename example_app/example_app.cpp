@@ -43,7 +43,7 @@ class ExampleApplication
          if ( radio_->id() < from )
          {	
          	debug_->debug( "  message is %s", buf );
-         	destruct();
+         	disableradio();
          }
          else
          {
@@ -54,9 +54,9 @@ class ExampleApplication
       Os::Radio::self_pointer_t radio_;
       Os::Timer::self_pointer_t timer_;
       Os::Debug::self_pointer_t debug_;
-      int registeration_num_;
+      int registeration_num_;		
       //---------------------------------------------------------------------
-      void  destruct()
+      void  disableradio() // extra added to the example_app 
       {
       		
         debug_->debug( " ::: radio turn off  %x ::: \n" ,radio_->id() );
