@@ -1,4 +1,3 @@
-
 The repo contains 3 Floder 
 
 simple_app
@@ -7,7 +6,7 @@ This folder is implementation of Extended shawn tutorial
 in shawn wiki for legacyapp implementation in shawn.
 this folder can be copied into legacyapp folder in shawn/src and 
 by compiling by making legacyapp_simple_app_module to ON  
-we get a proceossor name "simple_app" registered.
+we get a processor name "simple_app" registered.
 
 
 testq_pro
