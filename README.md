@@ -9,6 +9,8 @@ by compiling by making legacyapp_simple_app_module to ON
 we get a processor name "simple_app" registered.
 
 
+
+
 testq_pro
 ***********************************************************
 This folder is implementation of Extended shawn tutorial 
@@ -31,9 +33,12 @@ it shutdown all node whose node_id are less that the its own node_id
 the modification can be found in the "testq_pro_processor.cpp" file
 
 
+
+
 example_app
 ************************************************************
 this folder contains the files which are modified from main wiselib folder
 under apps/geniric_app/example_app. this diasable the radio concept
-for the same above question.
+for the same above question.plz set the path in Makefile inside this folder
+to include Makefile.local 
 
