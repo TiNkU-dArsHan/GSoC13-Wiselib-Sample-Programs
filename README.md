@@ -42,3 +42,8 @@ under apps/geniric_app/example_app. this diasable the radio concept
 for the same above question.plz set the path in Makefile inside this folder
 to include Makefile.local 
 
+
+rpc_imple
+*************************************************************
+this folder contains an RPC implemantation sample . I have made use of 
+rpcgen so that the implementation would be fast. 
