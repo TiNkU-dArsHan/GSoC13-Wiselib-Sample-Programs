@@ -6,25 +6,24 @@
 #include <stdlib.h>
 #include "msg.h"
 
-int *
-printmessage_1_svc(msg,req)
-	char **msg;
-	struct svc_req *req;
-
+int * printmessage_1_svc ( char **message , struct svc_req *request )
 {
 	static int result;	
-	FILE *f;
+	FILE *fileid;
 	
-	f = fopen("/dev/console", "w");
-	if (f == (FILE *)NULL) {
+	fileid = fopen("/dev/console", "w");
+	
+	if ( fileid == (FILE *)NULL ) 
+	{
 	result = 0;
 	return (&result);
 	}
 
-	fprintf(f, "%s\n", *msg);
-	fclose(f);
+	fprintf(fileid, "%s\n", *message);
+	fclose(fileid);
 
 result = 1;
 return(&result);
+
 }
 
