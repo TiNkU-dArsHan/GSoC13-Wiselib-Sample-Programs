@@ -1,6 +1,6 @@
-The repo contains 3 Floder 
+The repo contains 4 Floder 
 
-simple_app
+1. simple_app
 ***********************************************************
 This folder is implementation of Extended shawn tutorial 
 in shawn wiki for legacyapp implementation in shawn.
@@ -11,7 +11,7 @@ we get a processor name "simple_app" registered.
 
 
 
-testq_pro
+2. testq_pro
 ***********************************************************
 This folder is implementation of Extended shawn tutorial 
 in shawn wiki for legacyapp implementation in shawn.
@@ -35,7 +35,7 @@ the modification can be found in the "testq_pro_processor.cpp" file
 
 
 
-example_app
+3. example_app
 ************************************************************
 this folder contains the files which are modified from main wiselib folder
 under apps/geniric_app/example_app. this diasable the radio concept
@@ -43,7 +43,7 @@ for the same above question.plz set the path in Makefile inside this folder
 to include Makefile.local 
 
 
-rpc_imple
+4. rpc_imple
 *************************************************************
-this folder contains an RPC implemantation sample . I have made use of 
-rpcgen so that the implementation would be fast. 
+this folder contains an RPC implemantation sample [not wiselib complateble]. I have made use of 
+rpcgen so the implementation was fast. 
