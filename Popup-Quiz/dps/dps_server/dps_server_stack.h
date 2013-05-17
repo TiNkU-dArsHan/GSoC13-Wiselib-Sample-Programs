@@ -66,17 +66,59 @@ namespace wiselib
 			timer_ = &timer;
 			uart_ = &uart;
 			
-			debug_->debug( "DPS Client stack init: %x", radio_->id());
+			//debug_->debug( "DPS Client stack init: %x", radio_->id());
 			
 	
 		
 			/**
 			*
-			*Initialize all the -layers of Server stack: UDP, ICMPv6,Serverstub,DPSClient,ipv6,6lowpan,DLL
+			*Initialize all the -layers of Server stack: 6lowpan,ServerDPS,Serverstub,IPv6,UDP,ICMPv6
 			*		    -mangers of the stack: PacketPoolManager etc..		
-			*
+			*+--------------+
+			*|UDP	|ICMPv6	|
+			*+--------------+
+			*|     IPv6	|
+			*+--------------+
+			*|Server|	|
+			*|stub	|	|
+			*|------|6lowpan|
+			*|Server|	|
+			*|DPS	|	|
+			*+------+-------+
+			*|  OSradio	|
+			*+--------------+
 			*
 			*/
+			
+	
+		/*Init LoWPAN
+		lowpan.init(*radio_, *debug_, &packet_pool_mgr, *timer_ );			
+		*/
+			
+			
+			/**
+		*On init ServerDPS will listen for RPC broadcast message i,e DISCOVER mgs send from client nodes.
+		*
+		*this module uses RPC for establishing communication between Client node 
+		*
+		*/	
+		
+			ServerDPS.init(*radio_,*debug_,*timer_,&packet_pool_mgr);	
+		
+		
+		
+		/**
+		* On init Serverstub 
+		*/
+			Serverstub.init( *radio_, *debug_, *timer_, &packet_pool_mgr);
+		
+			
+		
+			
+		/*Init IPv6
+		ipv6.init( *radio_, *debug_, &packet_pool_mgr, *timer_, &interface_manager );
+		*/
+		
 			
 		/*Init UDP
 			udp.init( ipv6, *debug_, &packet_pool_mgr);
@@ -92,21 +134,7 @@ namespace wiselib
 				debug_->debug( "Fatal error: icmpv6 layer enabling failed! " );
 		*/
 		
-		/**
-		* On init Serverstub 
-		*/
-		//	Serverstub.init( *radio_, *debug_, *timer_, &packet_pool_mgr);
 		
-			
-		/**
-		*On init DPSServer will listen for RPC broadcast message i,e DISCOVER mgs send from client nodes.
-		*
-		*this module uses RPC for establishing communication between Client node 
-		*
-		*/	
-		/*
-		*	DPSServer.init(*radio_,*debug_,*timer_,&packet_pool_mgr);	
-		*/
 		
 		
 		}

@@ -22,15 +22,9 @@ typedef wiselib::OSMODEL Os;
 typedef Os::Radio Radio;
 typedef Os::Radio::node_id_t node_id_t;
 typedef Os::Uart Uart;
-/*
-#ifdef SHAWN
-typedef wiselib::ShawnTestbedserviceUartModel<wiselib::OSMODEL> Uart;
-#else
 
-#endif
-*/
 
-typedef wiselib::DPSServerStack<Os, Radio, Os::Debug, Os::Timer, Uart> DPS_stack_t;
+typedef wiselib::DPSServerStack<Os, Radio, Os::Debug, Os::Timer, Uart> DPS_server_stack_t;
 
 //typedef wiselib::IPv6Address<Radio, Os::Debug> IPv6Address_t;
 
@@ -40,7 +34,7 @@ class DpsserverApp
 public :
 	
 	
-	DPS_stack_t dps_stack_;
+	DPS_server_stack_t dps_server_stack_;
 	Radio::self_pointer_t radio_;
 	Os::Timer::self_pointer_t timer_;
 	Os::Debug::self_pointer_t debug_;
@@ -64,7 +58,7 @@ public :
 		*to find the potential server.on reciving one 
 		*and the client's ipv6 address is set by the server.
 		*/
-		dps_stack_.init ( *radio_, *debug_, *timer_, *uart_ );
+		dps_server_stack_.init ( *radio_, *debug_, *timer_, *uart_ );
 				
 		
 		

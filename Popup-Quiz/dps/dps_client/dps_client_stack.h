@@ -49,8 +49,8 @@ namespace wiselib
 		*/
 		//typedef wiselib::UDP<OsModel, IPv6_t, Radio, Debug> UDP_t;
 		//typedef wiselib::ICMPv6<>
-		//typedef wiselib::clientstub<>
-		//typedef wiselib::DPSClient<>
+		//typedef wiselib::Clientstub<>
+		//typedef wiselib::ClientDPS<>
 		
 		
 		enum ErrorCodes
@@ -75,18 +75,50 @@ namespace wiselib
 		
 			/**
 			*
-			*Initialize all the -layers of Client stack: UDP, ICMPv6, Clientstub, DPSClient,DLL
+			*Initialize all the -layers of Client stack: DPS , Clientstub/virtual-ipv6 ,UDP, ICMPv6.
 			*		    -mangers of the stack: PacketPoolManager etc..		
-			*
-			*
+			*+--------------+
+			*|UDP	|ICMPv6	|
+			*+--------------+
+			*|virtual	| 
+			*|IPv6	|	|
+			*|------|	|
+			*|	|	|
+			*|	|	|
+			*|Client|	|
+			*|DPS	|	|
+			*|      |	|
+			*+------+-------+
+			*|  OSradio	|
+			*+--------------+
 			*/
 			
+		/**
+		*On init ClientDPS a RPC broadcast[DISCOVER] message is send ,to find potential server
+		*this module uses RPClibrary [wiselib compatable] for establishing communication between
+		*distant node 
+		* 
+		*/	
+		/*
+		*	ClientDPS.init(*radio_,*debug_,*timer_,&packet_pool_mgr);	
+		*/
+		
+		/**
+		* On init clientstub will initialize all the required
+		* modules for marsheling and unmarsheling and interfaces provided to the upper layer
+		*/
+		//	Clientstub.init( *radio_, *debug_, *timer_, &packet_pool_mgr);
+		
+		
+		
 		/*Init UDP
+		
 			udp.init( ipv6, *debug_, &packet_pool_mgr);
 			//Just register callback, not enable IP radio
 			if( SUCCESS != udp.enable_radio() )
 				debug_->debug( "Fatal error: UDP layer enabling failed! " );
 		*/
+		
 		
 		/*Init ICMPv6
 			icmpv6.init( ipv6, *debug_, &packet_pool_mgr);
@@ -95,22 +127,9 @@ namespace wiselib
 				debug_->debug( "Fatal error: icmpv6 layer enabling failed! " );
 		*/
 		
-		/**
-		* On init clientstub will initialize all the required
-		* modules 
-		*/
-		//	clientstub.init( *radio_, *debug_, *timer_, &packet_pool_mgr);
 		
 			
-		/**
-		*init DPSClient a RPC broadcast[DISCOVER] message is send ,to find potential server
-		*this module uses RPClibrary [wiselib compatable] for establishing communication between
-		*distant node 
-		*Fragmentation , 
-		*/	
-		/*
-		*	DPSClient.init(*radio_,*debug_,*timer_,&packet_pool_mgr);	
-		*/
+		
 		
 		
 		}

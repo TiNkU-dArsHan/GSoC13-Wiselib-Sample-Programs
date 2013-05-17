@@ -30,7 +30,7 @@ typedef wiselib::ShawnTestbedserviceUartModel<wiselib::OSMODEL> Uart;
 #endif
 */
 
-typedef wiselib::DPSClientStack<Os, Radio, Os::Debug, Os::Timer, Uart> DPS_stack_t;
+typedef wiselib::DPSClientStack<Os, Radio, Os::Debug, Os::Timer, Uart> DPS_client_stack_t;
 
 //typedef wiselib::IPv6Address<Radio, Os::Debug> IPv6Address_t;
 
@@ -40,7 +40,7 @@ class DpsclientApp
 public :
 	
 	
-	DPS_stack_t dps_stack_;
+	DPS_client_stack_t dps_client_stack_;
 	Radio::self_pointer_t radio_;
 	Os::Timer::self_pointer_t timer_;
 	Os::Debug::self_pointer_t debug_;
@@ -66,7 +66,7 @@ public :
 		/** on inisialization of dps stack rpc broadcast message is send to find the potential server
 		*and the client's ipv6 address is set by the server.
 		*/
-		dps_stack_.init ( *radio_, *debug_, *timer_, *uart_ );
+		dps_client_stack_.init ( *radio_, *debug_, *timer_, *uart_ );
 				
 		
 		
@@ -74,7 +74,7 @@ public :
 		* and recive message over the network 
 		*/
 		
-		//callback_id = dps_stack_.udp.reg_recv_callback<DpsclientApp,
+		//callback_id = dps_client_stack_.udp.reg_recv_callback<DpsclientApp,
 		//				&DpsclientApp::receive_reply>( this );	
 						
 						
