@@ -1,3 +1,9 @@
+/*
+*File:client_stub.h
+*
+*/
+
+
 #ifndef __ALGORITHMS_DPS_DPS_CLIENT_CLIENTSTUB_H__
 #define __ALGORITHMS_DPS_DPS_CLIENT_CLIENTSTUB_H__
 
@@ -17,8 +23,27 @@
 
 */
 /**
+*This files defines all the class and it function required by the 
+*ClientStub layer
+* the main fuctions offered by the client stub are
+* bind_client_to_server();
+* remotesend() ;
+* remoterecive();
+* getipaddr();
 *
+*       On init of this layer the client bind to the server by a 3 way hand shake the Client stub uses bind_client_to_server()
+*function to perform this binding
 *
+*	The upperlayer uses remotesend() to send IPv6 paccket to remote destination
+* once the data is received by the upperlayer it has to be marshelled the IPv6 addr is converted 
+*to MAC addr and sent to ClientDPS
+* 	
+*	Client stub uses remoterecive() function to receive the packet and its type by the ClientDPS
+*once the full data is received the data is unmarshelled and made avialable  to the upperlayer
+*
+*	getipaddr() is the fuction used by the client-stub to get ipv6 addr and networkprefix from the server
+*
+*[FOR FEW OF THE FUNCTIONS AND TEMPLETES IN THE FILE THE PARAMETER LIST MUST BE EXTENDED UPON ADDING OTHER FUNCTIONS AND CLASS]
 */
 #include "util/base_classes/radio_base.h"
 
@@ -233,11 +258,6 @@ namespace wiselib
 				else if already connected 
 					send  ABORT message
 		*
-		*	
-		*		
-		*
-		* 
-		*
 		*/
 		return 1;
 	}
@@ -281,6 +301,7 @@ namespace wiselib
 		/*reciving data from ClientDPS
 		and 
 		unmarshelling it
+		call required procedure
 		*/
 		
 	}

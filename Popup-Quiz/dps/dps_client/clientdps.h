@@ -2,8 +2,26 @@
 #define __ALGORITHMS_DPS_DPS_CLIENT_CLIENTDPS_H__
 
 /**
-* all the configuration files required by the ClientDPS 
+*This files defines all the class and it function required by the 
+*DPS  
+* the main fuctions in cliendps are :
+* send() 
+* receive()
 *
+* 
+*	the upperlayer uses send() to send marshelled IPv6 paccket with the to remote destination
+* once the data is received by the upperlayer depending on the TYPE of data the RPC-packet is constructed 
+* if required the packet is fragmented and the checksum is calculauted for each of them.
+* with the required protocol-number , destination addr the RPC-packet is sent to the radiolayer .
+*
+* 	
+*	Client stub uses recive() function to receive the RPC-packet from the Radio layer.
+*once the packets are recived it is unfragemented and checksum is check for each of the packets 
+*once full data is received and unfragmented . the upper layer is informed for further processing
+*
+*	
+*
+*[FOR FEW OF THE FUNCTIONS AND TEMPLETES IN THE FILE THE PARAMETER LIST MUST BE EXTENDED UPON ADDING OTHER FUNCTIONS AND CLASS]
 */
 
 /*
@@ -19,6 +37,12 @@ etc...
 */
 #include "util/base_classes/radio_base.h"
 #include "uart_radio.h"
+
+/**
+*the 
+*
+*
+*/
 
 namespace wiselib
 {

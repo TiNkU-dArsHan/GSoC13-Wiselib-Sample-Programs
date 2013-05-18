@@ -24,6 +24,8 @@
 
 //#include "algorithms/dps/dps_client/udp.h"
 
+
+
 namespace wiselib
 {
 	
@@ -100,10 +102,12 @@ namespace wiselib
 			* |	|		|
 			* |	|  OSradio	|
 			* +-----+---------------+
+			*[the parameter of the function call can be extended]
 			*/
 			
 		/**
-		*On init ClientDPS a all the modules required by the ClientDPS are initialized
+		*clientdps.init();
+		*On init ClientDPS  all the modules required by the ClientDPS are initialized
 		*
 		*
 		* 
@@ -114,18 +118,20 @@ namespace wiselib
 		* 	 are the main functions
 		* once the rpc-message packets is formed it is sent to OSradio layer for forwarding.
 		*during the process the IPv6 addr is converted into MAC-addr
+		*
+	* [FOR FEW OF THE FUNCTIONS AND TEMPLETES IN THE FILE THE PARAMETER LIST MUST BE EXTENDED UPON ADDING OTHER FUNCTIONS AND CLASS]
 		*/	
 		
 			clientdps.init( *radio_,*debug_,*timer_);	
 		
 		
 		/**
+		*clientstub.init();
 		* On init clientstub will initialize all the required
 		* modules for marsheling and unmarsheling of the arguments
 		*routing table is initialised.
 		*RPC broadcast[DISCOVER] message is send to find potential server
-		
-		
+		*
 		*interfaces provided to the upper layer UDP and lower layer dll are
 		*remotesend( destinationaddr-IPv6,size,[UDP/icmpv6]packet);
 		*remotereceive( destinationaddr-MAC,size,RPC-packet) );
@@ -160,8 +166,6 @@ namespace wiselib
 		
 		
 			
-		
-		
 		
 		}
 		

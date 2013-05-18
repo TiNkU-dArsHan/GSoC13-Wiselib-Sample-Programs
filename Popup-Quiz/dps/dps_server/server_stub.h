@@ -18,18 +18,32 @@
 */
 
 /**
+*This files defines all the class and it function required by the 
+*DPS  
 *this layer completely defines the functions of the ServerSkeleton
 *the functionality of this layer are 
 *1).On initialization the server start listenting to the Client
-*	on the through DPS side of the stack.
+*	 the through DPS side of the stack.
 *	
 *	
 *2).On reciving of the data from ServerDPS unmarshell it 
 *	call the required procesdure referring to the protocol-num
 *	
 *3).On Reciving packets from upper layer marshell it and send to the ServerDPS
-*	
-*4) On Reciving of the packets 
+*
+*send();
+*receive();
+*call_required_procedure();
+* 
+* 	The send() functionally is same as that of client-stub
+*
+* 	Once the data is recived from the ServerDPS depending on the TYPE of the message
+* the the required actions are called by the receive(). The client is checked for the 
+* the athuntication i,e weather it is binded to the service are not before calling the call_required_procedure();
+*
+*	the call_required_procedure(); provided different services to the client node once the
+* data is received by the receive call back depending on the protocaol-number the required service is called
+* 
 *
 **/
 
@@ -269,7 +283,9 @@ namespace wiselib
 		/*
 		data (marshelling)
 		 of data
-		 converting ipv6 address to mac address
+		 set type of the message
+		 keep track of the counter
+		 converting IPv6-MAC addr
 		 forwarding to ServerDPS 
 		*/
 		return 1;

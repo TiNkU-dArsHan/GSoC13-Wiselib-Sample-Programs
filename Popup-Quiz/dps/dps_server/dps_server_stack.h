@@ -119,6 +119,8 @@ namespace wiselib
 			* |	|    OSradio	|
 			* +-----+---------------+
 			*
+			*
+[FOR FEW OF THE FUNCTIONS AND TEMPLETES IN THE FILE THE PARAMETER LIST MUST BE EXTENDED UPON ADDING OTHER FUNCTIONS AND CLASS]
 			*/
 	
 		/*Init LoWPAN
