@@ -3,8 +3,8 @@
  * 
  */
 
-#ifndef __ALGORITHMS_DPS_DPSCLIENT_DPS_CLIENT_STACK_H__
-#define __ALGORITHMS_DPS_DPSCLIENT_DPS_CLIENT_STACK_H__
+#ifndef __ALGORITHMS_DPS_DPS_CLIENT_DPS_CLIENT_STACK_H__
+#define __ALGORITHMS_DPS_DPS_CLIENT_DPS_CLIENT_STACK_H__
 
 /**
 * all the configuration files required by the DPSClient Stack
@@ -18,6 +18,9 @@
 * the header files of the each -layer in the stack
 *			       -managers of the stack 
 */
+#include "algorithms/dps/dps_client/clientdps.h"
+#include "algorithms/dps/dps_client/client_stub.h"
+#include "algorithms/dps/dps_client/uart_radio.h"
 
 //#include "algorithms/dps/dps_client/udp.h"
 
@@ -29,7 +32,6 @@ namespace wiselib
 		typename Debug_P,
 		typename Timer_P,
 		typename Uart_P>
-	
 	class DPSClientStack
 	{
 	
@@ -47,10 +49,15 @@ namespace wiselib
 		
 		
 		*/
-		//typedef wiselib::UDP<OsModel, IPv6_t, Radio, Debug> UDP_t;
-		//typedef wiselib::ICMPv6<>
-		//typedef wiselib::Clientstub<>
-		//typedef wiselib::ClientDPS<>
+		typedef wiselib::UartRadio<OsModel, Radio, Debug, Timer, Uart> UartRadio_t;
+		
+		typedef wiselib::ClientDPS<OsModel, Radio, Debug, Timer, UartRadio_t> ClientDPS_t;
+		
+		typedef wiselib::Clientstub<OsModel, ClientDPS_t, Radio, Debug , Timer> Clientstub_t;
+		
+		//typedef wiselib::UDP<OsModel, Clientstub_t, Radio, Debug> UDP_t;
+		//typedef wiselib::ICMPv6<OsModel, Clientstub_t, Radio, Debug, Timer> ICMPv6_t;
+		
 		
 		
 		enum ErrorCodes
@@ -75,45 +82,69 @@ namespace wiselib
 		
 			/**
 			*
-			*Initialize all the -layers of Client stack: DPS , Clientstub/virtual-ipv6 ,UDP, ICMPv6.
-			*		    -mangers of the stack: PacketPoolManager etc..		
-			*+--------------+
-			*|UDP	|ICMPv6	|
-			*+--------------+
-			*|virtual	| 
-			*|IPv6	|	|
-			*|------|	|
-			*|	|	|
-			*|	|	|
-			*|Client|	|
-			*|DPS	|	|
-			*|      |	|
-			*+------+-------+
-			*|  OSradio	|
-			*+--------------+
+			*Initialize all the -layers of Client stack in the order : DPS,Clientstub/virtual-ipv6, ICMPv6,UDP.
+			*		    -mangers of the stack: PacketPoolManager etc..
+			*The parameter of recieve function in each layer is defined by its lower layer.	
+			*	
+			*	+---------------+
+			*	|UDP	|ICMPv6	|
+			* +-----+---------------+
+			* |	 virtual-IPv6/	| 
+			* |	 Client-stub	|
+			* |---------------------|
+			* |	|		|
+			* |Client		|
+			* |DPS	|		|
+			* |	|		|
+			* |	|---------------|
+			* |	|		|
+			* |	|  OSradio	|
+			* +-----+---------------+
 			*/
 			
 		/**
-		*On init ClientDPS a RPC broadcast[DISCOVER] message is send ,to find potential server
-		*this module uses RPClibrary [wiselib compatable] for establishing communication between
-		*distant node 
+		*On init ClientDPS a all the modules required by the ClientDPS are initialized
+		*
+		*
 		* 
+		* fragmentation/unfragmentation of data
+		* RPC-packet formation
+		* checksum
+		* AES security
+		* 	 are the main functions
+		* once the rpc-message packets is formed it is sent to OSradio layer for forwarding.
+		*during the process the IPv6 addr is converted into MAC-addr
 		*/	
-		/*
-		*	ClientDPS.init(*radio_,*debug_,*timer_,&packet_pool_mgr);	
-		*/
+		
+			clientdps.init( *radio_,*debug_,*timer_);	
+		
 		
 		/**
 		* On init clientstub will initialize all the required
-		* modules for marsheling and unmarsheling and interfaces provided to the upper layer
+		* modules for marsheling and unmarsheling of the arguments
+		*routing table is initialised.
+		*RPC broadcast[DISCOVER] message is send to find potential server
+		
+		
+		*interfaces provided to the upper layer UDP and lower layer dll are
+		*remotesend( destinationaddr-IPv6,size,[UDP/icmpv6]packet);
+		*remotereceive( destinationaddr-MAC,size,RPC-packet) );
+		*
+		*
 		*/
-		//	Clientstub.init( *radio_, *debug_, *timer_, &packet_pool_mgr);
+			clientstub.init( *radio_, *debug_, *timer_ );
 		
 		
 		
-		/*Init UDP
+		/**
+		* After data is packed into the UDP/ICMPv6 packets it is send to remote IPv6 layer 
+		* by call Clientstub interface remotesend(destinationaddr,size,UDP/icmpv6packet);
+		*similarly the UDP callback recives packets from destination node through the client stub 
+		*after RPC-packet is unmarshelled .
+		*
+		*/
 		
-			udp.init( ipv6, *debug_, &packet_pool_mgr);
+		/*	udp.init( ipv6, *debug_, &packet_pool_mgr);
 			//Just register callback, not enable IP radio
 			if( SUCCESS != udp.enable_radio() )
 				debug_->debug( "Fatal error: UDP layer enabling failed! " );
@@ -134,7 +165,8 @@ namespace wiselib
 		
 		}
 		
-
+		//ICMPv6_t icmpv6; 
+		//UDP_t udp;
 		
 		
 	private:
@@ -142,6 +174,10 @@ namespace wiselib
 		typename Debug::self_pointer_t debug_;
 		typename Timer::self_pointer_t timer_;
 		typename Uart::self_pointer_t uart_;
+		
+		Clientstub_t clientstub;
+		ClientDPS_t clientdps;
+		UartRadio_t uart_radio;
 		
 	
 		

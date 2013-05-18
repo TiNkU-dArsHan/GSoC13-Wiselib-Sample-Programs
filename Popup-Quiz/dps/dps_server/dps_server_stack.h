@@ -3,8 +3,8 @@
  * 
  */
 
-#ifndef __ALGORITHMS_DPS_DPSCLIENT_DPS_SERVER_STACK_H__
-#define __ALGORITHMS_DPS_DPSCLIENT_DPS_SERVER_STACK_H__
+#ifndef __ALGORITHMS_DPS_DPS_SERVER_DPS_SERVER_STACK_H__
+#define __ALGORITHMS_DPS_DPS_SERVER_DPS_SERVER_STACK_H__
 
 /**
 * all the configuration files required by the DPSServer Stack
@@ -19,6 +19,17 @@
 *			       -managers of the stack 
 */
 
+
+#include "algorithms/dps/dps_server/serverdps.h"
+#include "algorithms/dps/dps_server/server_stub.h"
+#include "algorithms/dps/dps_server/uart_radio.h"
+
+/**
+*server stack receives packets from the other nodes through
+*2 different side i,e through normal protocol stack
+*and also through DPS protocol stack
+*The functions of each are defined in there repective layers
+*/
 
 namespace wiselib
 {
@@ -46,8 +57,15 @@ namespace wiselib
 		
 		
 		*/
+		
+		typedef wiselib::UartRadio<OsModel, Radio, Debug, Timer, Uart> UartRadio_t;
+		
+		typedef wiselib::ServerDPS<OsModel, Radio, Debug, Timer, UartRadio_t> ServerDPS_t;
+		
+		typedef wiselib::Serverstub<OsModel, ServerDPS_t, Radio, Debug , Timer> Serverstub_t;
+		
 		//typedef wiselib::UDP<OsModel, IPv6_t, Radio, Debug> UDP_t;
-		//
+		
 		
 		
 		enum ErrorCodes
@@ -66,51 +84,83 @@ namespace wiselib
 			timer_ = &timer;
 			uart_ = &uart;
 			
-			//debug_->debug( "DPS Client stack init: %x", radio_->id());
+			debug_->debug( "DPS Server stack init: %x", radio_->id());
 			
 	
 		
 			/**
 			*
-			*Initialize all the -layers of Server stack: 6lowpan,ServerDPS,Serverstub,IPv6,UDP,ICMPv6
-			*		    -mangers of the stack: PacketPoolManager etc..		
-			*+--------------+
-			*|UDP	|ICMPv6	|
-			*+--------------+
-			*|     IPv6	|
-			*+--------------+
-			*|Server|	|
-			*|stub	|	|
-			*|------|6lowpan|
-			*|Server|	|
-			*|DPS	|	|
-			*+------+-------+
-			*|  OSradio	|
-			*+--------------+
+			*Initialize all the 
+					-layers of Server stack in the order :
+			*			6lowpan , uart_radio , ServerDPS , Serverstub ,IPv6 ,ICMPv6 ,UDP.
+			*	[Always the parameter of receive function in each layer is defined by its lower layer]
+				
+			*		 -mangers of the stack required for both side i,e. RPC and normal side:
+							 PacketPoolManager,Interface_manager etc..
+			*	init all the required managers in there respective order between the layers 
+			*	
+			*
+			*
+			* 
+			*
+			*
+			*	+---------------+
+			*	|UDP	|ICMPv6	|
+			* +-----+---------------+
+			* |Server     IPv6 	| 
+			* |STUB	|		|
+			* |-----|---------------|
+			* |	|		|
+			* |Server		|
+			* |DPS	|    6LOWPAN	|
+			* |	|---------------|
+			* |	|      		|
+			* |	|		|
+			* |	|    OSradio	|
+			* +-----+---------------+
 			*
 			*/
-			
 	
 		/*Init LoWPAN
 		lowpan.init(*radio_, *debug_, &packet_pool_mgr, *timer_ );			
 		*/
 			
+		/*uart radio
+		*/
 			
-			/**
-		*On init ServerDPS will listen for RPC broadcast message i,e DISCOVER mgs send from client nodes.
+		/**
+		*serverdps.init();
+		* briefly initialzes all the modules required for RPC functioning
 		*
-		*this module uses RPC for establishing communication between Client node 
+		* fragmentation/unfragmentation of data
+		* RPC-packet formation
+		* checksum
+		* AES security
+		* 	 are the main functions
+		* once the rpc-message packets is formed it is sent to OSradio layer for forwarding.
+		*during the process the IPv6 addr is converted into MAC-addr
 		*
 		*/	
 		
-			ServerDPS.init(*radio_,*debug_,*timer_,&packet_pool_mgr);	
+			serverdps.init(*radio_,*debug_,*timer_);	
 		
 		
 		
 		/**
-		* On init Serverstub 
+		*serverstub.init();
+		* On init Serverstub will initialize all the required
+		* modules for marsheling and unmarsheling of the arguments
+		*
+		*routing table is initialised.
+		* the server starts listening to the client 
+		*
+		*interfaces provided to the upper layer UDP and lower layer dll are
+		*remotesend( destinationaddr-IPv6,size,[UDP/icmpv6]packet);
+		*remotereceive( destinationaddr-MAC,size,RPC-packet) );
+		*
+		*
 		*/
-			Serverstub.init( *radio_, *debug_, *timer_, &packet_pool_mgr);
+			serverstub.init( *radio_, *debug_, *timer_);
 		
 			
 		
@@ -135,8 +185,6 @@ namespace wiselib
 		*/
 		
 		
-		
-		
 		}
 		
 
@@ -147,9 +195,12 @@ namespace wiselib
 		typename Debug::self_pointer_t debug_;
 		typename Timer::self_pointer_t timer_;
 		typename Uart::self_pointer_t uart_;
-		
-	
 		UartRadio_t uart_radio;
+		
+		Serverstub_t serverstub;
+		ServerDPS_t serverdps;
+	
+		
 	};
 }
 #endif
