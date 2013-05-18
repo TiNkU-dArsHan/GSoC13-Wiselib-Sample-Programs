@@ -134,8 +134,9 @@ namespace wiselib
 		/**
 		*
 		*/	
-		int listen_to_client();
-		
+		//listen_to_client
+		// register the receive() callback and receive the data from serverstub
+		//unmarshell the data and call required proceduer/send the response
 		/**
 		*
 		*/
@@ -230,43 +231,7 @@ namespace wiselib
 	return 1;
 		
 	}
-	//------------------------------------------------------------------------------------------
 	
-	template<typename OsModel_P,
-		typename Radio_ServerDPS_P,
-		typename Radio_P,
-		typename Debug_P,
-		typename Timer_P>
-	int
-	Serverstub<OsModel_P, Radio_ServerDPS_P, Radio_P, Debug_P, Timer_P>::
-	
-	listen_to_client()
-	{
-		/**
-		*listen to client 
-		*if RPC DISCOVERY packet
-		*	send RPC ADVITISE message to client
-		*	
-		*
-		*if CONNECT packet
-		*	if resource avilable 
-		*	then
-		*		send ALLOW		
-		*	else
-		*		send ABORT
-		* 
-		if FINISH packet
-		*  set client ipv6 addr 
-		*  store client ipv6 and mac addr in route-over routing table
-		*
-		*if RPC REQUEST packet
-		* 	unmarshall the data and call the requires procedure
-		
-		*/
-		
-		return 1;
-		
-	}
 
 	//------------------------------------------------------------------------------------
 	//Call the required procedure
@@ -280,6 +245,8 @@ namespace wiselib
 	Serverstub<OsModel_P,Radio_ServerDPS_P, Radio_P, Debug_P, Timer_P>::
 	call_required_procedure( )
 	{
+	
+	
 	
 	
 	return 1;
@@ -299,7 +266,8 @@ namespace wiselib
 	Serverstub<OsModel_P,Radio_ServerDPS_P, Radio_P, Debug_P, Timer_P>::
 	remotesend( )
 	{	
-		/*data (marshelling)
+		/*
+		data (marshelling)
 		 of data
 		 converting ipv6 address to mac address
 		 forwarding to ServerDPS 
@@ -322,9 +290,31 @@ namespace wiselib
 	Serverstub<OsModel_P,Radio_ServerDPS_P, Radio_P, Debug_P, Timer_P>::
 	remotereceive( )
 	{
-		/*reciving data from ServerDPS
-		and 
-		unmarshelling it
+		
+		/**
+		*listen to client [recivie the data from serverDPS]
+		*check for the TYPE of the RPC message
+		*
+		*if RPC DISCOVERY packet
+		*	send RPC ADVITISE message to client
+		*	
+		*
+		*if CONNECT packet
+		*	if resource avilable 
+		*	then
+		*		send ALLOW message
+		*	else
+		*		send ABORT message
+		* 
+		*if FINISH packet
+		*  set client ipv6 addr
+		*  store client mac addr in routing table
+		*
+		*if REQUEST message
+		*  	check for the 
+		* 		athentication of the client i,e weather the protocol is binded to the client / not 
+		* 		unmarshell the data	
+				call the required procedure.
 		*/
 		
 	}
